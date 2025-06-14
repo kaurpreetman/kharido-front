@@ -60,7 +60,7 @@ export const removeFromCart = createAsyncThunk(
   'cart/removeItem',
   async ({ productId, size }, { rejectWithValue }) => {
     try {
-      await axios.delete(
+      await axios.post(
         "https://kharido-in-mpzi.onrender.com/api/cart/removeone",
         { productId, size },
         { withCredentials: true }
