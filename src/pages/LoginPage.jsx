@@ -50,7 +50,7 @@ export function LoginPage() {
     },
     onError: () => toast.error('Google Sign-In failed'),
     flow: 'implicit',
-    redirect_uri: 'https://guileless-sunshine-8a499f.netlify.app',
+    redirect_uri: 'https://khaidoin.netlify.app',
   });
 
   const handleSubmit = async (e) => {
