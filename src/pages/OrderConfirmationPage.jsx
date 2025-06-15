@@ -220,7 +220,7 @@ console.log(order);
                       {item.product?.name || "Unnamed Product"}
                     </h4>
                     <div className="text-sm text-gray-500 dark:text-gray-400 space-y-1">
-                      <p>Price: ₹{item.price}</p>
+                      <p>Price: ₹{item.price.toFixed(2)}</p>
                       <p>Quantity: {item.quantity}</p>
                       {item.size!="null" && <p>Size: {item.size}</p>}
                     </div>
