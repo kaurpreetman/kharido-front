@@ -1,18 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { ProductCard } from '../components/ui/ProductCard';
 import { fetchProducts } from '../context/productSlice';
-import { useLocation } from 'react-router-dom';
+import { useQueryParams } from '../hooks/useQueryParams';
+import { useDebounce } from '../hooks/useDebounce';
 
 export const ProductsPage = () => {
   const dispatch = useDispatch();
   const { products, loading } = useSelector((state) => state.product);
   const search = useSelector((state) => state.ui.search);
+  const debouncedSearch = useDebounce(search, 400);
 
-  const [filteredProducts, setFilteredProducts] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('All');
-  const [selectedSubcategory, setSelectedSubcategory] = useState(null);
-  const [sortOrder, setSortOrder] = useState('relevant');
+  const { getParams, setParams } = useQueryParams();
 
   const categoriesWithSubcategories = {
     All: [],
@@ -24,21 +23,18 @@ export const ProductsPage = () => {
     Books: ['Fiction', 'Non-Fiction', 'Children’s Books'],
   };
 
-  const useQuery = () => new URLSearchParams(useLocation().search);
-  const query = useQuery();
+  const params = getParams();
+  const selectedCategory = params.category || 'All';
+  const selectedSubcategory = params.subcategory || null;
+  const sortOrder = params.sort || 'relevant';
 
   useEffect(() => {
-    const categoryFromURL = query.get('category');
-    if (categoryFromURL && categoriesWithSubcategories[categoryFromURL]) {
-      setSelectedCategory(categoryFromURL);
+    if (!products.length) {
+      dispatch(fetchProducts());
     }
-  }, []);
+  }, [dispatch, products.length]);
 
-  useEffect(() => {
-    dispatch(fetchProducts());
-  }, [dispatch]);
-
-  useEffect(() => {
+  const filteredProducts = useMemo(() => {
     let filtered = products;
 
     if (selectedCategory !== 'All') {
@@ -49,8 +45,8 @@ export const ProductsPage = () => {
       );
     }
 
-    if (search.trim()) {
-      const lower = search.toLowerCase();
+    if (debouncedSearch.trim()) {
+      const lower = debouncedSearch.toLowerCase();
       filtered = filtered.filter((product) =>
         product.name.toLowerCase().includes(lower) ||
         product.description?.toLowerCase().includes(lower) ||
@@ -64,13 +60,24 @@ export const ProductsPage = () => {
       filtered = [...filtered].sort((a, b) => b.price - a.price || a.name.localeCompare(b.name));
     }
 
-    setFilteredProducts(filtered);
-  }, [products, selectedCategory, selectedSubcategory, sortOrder, search]);
+    return filtered;
+  }, [products, selectedCategory, selectedSubcategory, sortOrder, debouncedSearch]);
+
+  const handleCategoryChange = (category) => {
+    setParams({ category, subcategory: null });
+  };
+
+  const handleSubcategoryChange = (subcategory) => {
+    setParams({ category: selectedCategory, subcategory });
+  };
+
+  const handleSortChange = (e) => {
+    setParams({ category: selectedCategory, subcategory: selectedSubcategory, sort: e.target.value });
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col lg:flex-row gap-8">
-        {/* Sidebar */}
         <aside className="lg:w-64 w-full bg-white dark:bg-dark-800 p-4 rounded-lg shadow-md">
           <div>
             <h3 className="text-lg font-semibold mb-3">Categories</h3>
@@ -83,10 +90,7 @@ export const ProductsPage = () => {
                       name="category"
                       value={category}
                       checked={selectedCategory === category}
-                      onChange={() => {
-                        setSelectedCategory(category);
-                        setSelectedSubcategory(null);
-                      }}
+                      onChange={() => handleCategoryChange(category)}
                       className="accent-primary-600"
                     />
                     <span className="ml-2 font-medium">{category}</span>
@@ -101,7 +105,7 @@ export const ProductsPage = () => {
                               name="subcategory"
                               value={subcategory}
                               checked={selectedSubcategory === subcategory}
-                              onChange={() => setSelectedSubcategory(subcategory)}
+                              onChange={() => handleSubcategoryChange(subcategory)}
                               className="accent-primary-600"
                             />
                             <span className="ml-2">{subcategory}</span>
@@ -119,7 +123,7 @@ export const ProductsPage = () => {
             <select
               className="w-full px-3 py-2 border rounded-md dark:bg-dark-700 dark:border-dark-600"
               value={sortOrder}
-              onChange={(e) => setSortOrder(e.target.value)}
+              onChange={handleSortChange}
             >
               <option value="relevant">Sort by: Relevant</option>
               <option value="low-high">Price: Low to High</option>
@@ -128,7 +132,6 @@ export const ProductsPage = () => {
           </div>
         </aside>
 
-        {/* Products grid */}
         <main className="flex-1">
           <div className="grid gap-6 grid-cols-[repeat(auto-fit,minmax(220px,1fr))]">
             {loading ? (
