@@ -22,7 +22,7 @@ export const ProductsPage = () => {
     Beauty: ['Skincare', 'Makeup', 'Fragrances'],
     Books: ['Fiction', 'Non-Fiction', 'Children’s Books'],
   };
-
+  console.log(products);
   const params = getParams();
   const selectedCategory = params.category || 'All';
   const selectedSubcategory = params.subcategory || null;
