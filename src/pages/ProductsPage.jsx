@@ -41,7 +41,7 @@ export const ProductsPage = () => {
       filtered = filtered.filter(
         (product) =>
           product.category === selectedCategory &&
-          (!selectedSubcategory || product.subcategory === selectedSubcategory)
+          (!selectedSubcategory || product.subCategory === selectedSubcategory)
       );
     }
 
@@ -50,7 +50,7 @@ export const ProductsPage = () => {
       filtered = filtered.filter((product) =>
         product.name.toLowerCase().includes(lower) ||
         product.description?.toLowerCase().includes(lower) ||
-        product.subcategory?.toLowerCase().includes(lower)
+        product.subCategory?.toLowerCase().includes(lower)
       );
     }
 
