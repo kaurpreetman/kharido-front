@@ -4,7 +4,7 @@ import { ProductCard } from '../components/ui/ProductCard';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import HeroBanner from '../components/ui/HeroBanner';
-import OurPolicy from '../components/OurPolicy';
+import OurPolicy from '../components/ui/OurPolicy';
 import { fetchBestsellers } from '../context/productSlice';
 
 export const HomePage = () => {

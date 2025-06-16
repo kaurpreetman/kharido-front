@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-import OurPolicy from '../components/OurPolicy';
+import OurPolicy from '../components/ui/OurPolicy';
 import { ProductCard } from '../components/ui/ProductCard';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchBestsellers } from '../context/productSlice';
