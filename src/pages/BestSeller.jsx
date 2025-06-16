@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
-import BestSeller from '../components/BestSeller';
-import NewsletterBox from '../components/NewsletterBox';
+
 import OurPolicy from '../components/OurPolicy';
 import { ProductCard } from '../components/ui/ProductCard';
 import { useDispatch, useSelector } from 'react-redux';
