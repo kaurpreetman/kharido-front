@@ -2,8 +2,8 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { ProductCard } from '../components/ui/ProductCard';
 import { fetchProducts } from '../context/productSlice';
-import { useQueryParams } from '../hooks/useQueryParams';
-import { useDebounce } from '../hooks/useDebounce';
+import { useQueryParams } from '../lib/useQueryParams';
+import { useDebounce } from '../lib/useDebounce';
 
 export const ProductsPage = () => {
   const dispatch = useDispatch();
