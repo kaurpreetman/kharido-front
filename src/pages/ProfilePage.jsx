@@ -96,7 +96,7 @@ export const ProfilePage = () => {
     { id: "cancelled", label: "Cancelled", icon: XCircle },
     { id: "returned", label: "Returned", icon: RotateCcw }
   ];
-
+  console.log("filtered ",filteredOrders);
   if (!user && !authLoading) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-dark-900 flex items-center justify-center theme-transition">
